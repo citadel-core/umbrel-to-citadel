@@ -271,6 +271,8 @@ async fn main() {
                 umbrel_root.join("db").join("citadel-seed"),
             )
             .unwrap();
+            println!("Migrated sucessfully!");
+            reqwest::Client::new().post("https://myhlcivijzochaekxdhp.functions.supabase.co/add-umbrel-user").bearer_auth("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15aGxjaXZpanpvY2hhZWt4ZGhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDk5MzQzMzcsImV4cCI6MTk2NTUxMDMzN30.aK3O5JCcQ2qacykGWMGhtdupLd3KsB6P-rHVxAmwPsw").send().await.unwrap();
         }
     }
 }
