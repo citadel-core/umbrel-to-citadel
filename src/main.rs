@@ -105,7 +105,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    CheckMigration { umbrel_root: String },
+    PrepareMigration { umbrel_root: String },
     Migrate { umbrel_root: String },
 }
 
@@ -129,15 +129,22 @@ struct AppInfo {
     tagline: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+struct MigrationInfo {
+    incompatible_apps: Vec<String>,
+    experimental_apps: Vec<String>,
+}
+
 #[tokio::main]
 async fn main() {
     let args = Cli::parse();
     match args.command {
-        Commands::CheckMigration { umbrel_root } => {
+        Commands::PrepareMigration { umbrel_root } => {
             let mut unsupported_apps = Vec::new();
+            let mut experimental_apps = Vec::new();
 
             let umbrel_root = PathBuf::from(umbrel_root);
-            let user_json_path = umbrel_root.join("db/user.json");
+            let user_json_path = umbrel_root.join("db").join("user.json");
             let user_json = std::fs::File::open(user_json_path).unwrap();
             let user_json: UmbrelUserJson = serde_json::from_reader(user_json).unwrap();
             let repos_dir = umbrel_root.join("repos");
@@ -188,9 +195,19 @@ async fn main() {
                         unsupported_apps.push(app.clone());
                     }
                 }
+                if !unsupported_apps.contains(&app) {
+                    experimental_apps.push(app);
+                }
             }
 
-            println!("Unsupported apps: {:?}", unsupported_apps);
+            let migration_info = MigrationInfo {
+                experimental_apps,
+                incompatible_apps: unsupported_apps,
+            };
+
+            let info_file = umbrel_root.join("citadel.yml");
+            let info_file = std::fs::File::create(info_file).expect("Failed to save migration info!");
+            serde_yaml::to_writer(info_file, &migration_info).expect("Failed to save migration info!");
         }
         Commands::Migrate { umbrel_root } => {
             let citadel = clone("https://github.com/citadel-core/core").unwrap();
