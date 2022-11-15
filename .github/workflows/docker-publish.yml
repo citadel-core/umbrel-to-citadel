@@ -33,7 +33,11 @@ jobs:
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 13
-
+      - uses: thejerrybao/setup-swap-space@v1
+        with:
+          swap-space-path: /swapfile
+          swap-size-gb: 8
+          remove-existing-swap-files: false
       - name: Checkout repository
         uses: actions/checkout@v3
 
