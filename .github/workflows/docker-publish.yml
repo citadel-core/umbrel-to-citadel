@@ -29,6 +29,17 @@ jobs:
       id-token: write
 
     steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          swap-storage: false
+
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 16
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -63,11 +74,6 @@ jobs:
         uses: docker/metadata-action@v2
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Set Swap Space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 16
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
