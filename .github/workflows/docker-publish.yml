@@ -67,7 +67,7 @@ jobs:
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
-          swap-size-gb: 10
+          swap-size-gb: 16
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
