@@ -4,7 +4,7 @@ RUN apt update && apt install -y build-essential
 
 WORKDIR /app
 COPY . /app
-RUN cargo build
+RUN cargo build --release
 
 FROM gcr.io/distroless/cc
 COPY --from=build-env /app/target/release/umbrel-to-citadel /
