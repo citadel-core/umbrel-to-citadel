@@ -1,0 +1,17 @@
+{
+  "deno.enable": false,
+  "deno.lint": true,
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "deno.enablePaths": [
+    "ui"
+  ],
+  "deno.config": "ui/deno.json",
+  "editor.suggest.showStatusBar": true,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "twind.debug": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
+}
